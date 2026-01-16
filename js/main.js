@@ -51,7 +51,7 @@ const State = {
             if (event === 'SIGNED_IN' && session) {
                 this.setUser(session.user);
                 window.App.showDashboard();
-                this.loadData();
+                this.loadData(); // Now triggers render inside loadData
             } else if (event === 'SIGNED_OUT') {
                 this.currentUser = null;
                 this.tasks = [];
@@ -101,6 +101,10 @@ const State = {
             console.error("Error loading data:", error);
         } finally {
             window.App.toggleLoading(false);
+            // FIX: Explicitly re-render UI after data load to show tasks immediately
+            window.App.renderTasks();
+            window.App.renderBrainDump();
+            if (window.lucide) window.lucide.createIcons();
         }
     }
 };
@@ -208,7 +212,7 @@ const Auth = {
         window.App.toggleLoading(true);
         await supabaseClient.auth.signOut();
         window.App.toggleLoading(false);
-        window.App.closeBrainDumpForce(); // Ensure sidebar closes on logout
+        window.App.closeBrainDumpForce(); 
     },
 
     togglePassword(fieldId) {
@@ -342,7 +346,7 @@ window.App = {
         if(dashView) dashView.classList.add('hidden');
         if(focusView) focusView.classList.add('hidden');
 
-        this.closeBrainDumpForce(); // CRITICAL FIX: Hide brain dump on login screen
+        this.closeBrainDumpForce();
     },
 
     showDashboard() {
@@ -722,7 +726,6 @@ window.App = {
         const overlay = document.getElementById('brain-dump-overlay');
         
         if (sidebar && overlay) {
-            // FIX: Remove conflicting utility class if it exists in HTML
             if (sidebar.classList.contains('translate-x-full')) {
                 sidebar.classList.remove('translate-x-full');
             }
@@ -745,8 +748,6 @@ window.App = {
         const overlay = document.getElementById('brain-dump-overlay');
         
         if (sidebar) {
-            // Re-apply translate-x-full if needed for initial hidden state logic, 
-            // but for toggle logic we rely on sidebar-closed.
             sidebar.classList.add('sidebar-closed');
             sidebar.classList.remove('sidebar-open');
         }
