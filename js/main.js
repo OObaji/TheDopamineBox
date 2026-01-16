@@ -722,6 +722,11 @@ window.App = {
         const overlay = document.getElementById('brain-dump-overlay');
         
         if (sidebar && overlay) {
+            // FIX: Remove conflicting utility class if it exists in HTML
+            if (sidebar.classList.contains('translate-x-full')) {
+                sidebar.classList.remove('translate-x-full');
+            }
+
             if (sidebar.classList.contains('sidebar-closed')) {
                 sidebar.classList.remove('sidebar-closed');
                 sidebar.classList.add('sidebar-open');
@@ -740,6 +745,8 @@ window.App = {
         const overlay = document.getElementById('brain-dump-overlay');
         
         if (sidebar) {
+            // Re-apply translate-x-full if needed for initial hidden state logic, 
+            // but for toggle logic we rely on sidebar-closed.
             sidebar.classList.add('sidebar-closed');
             sidebar.classList.remove('sidebar-open');
         }
