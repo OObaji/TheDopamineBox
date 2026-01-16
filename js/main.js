@@ -165,7 +165,10 @@ const Auth = {
         e.preventDefault();
         if (!supabaseClient) return;
 
-        const username = document.getElementById('reg-username').value.trim();
+        // Safely get username element (it might not exist in old HTML)
+        const usernameInput = document.getElementById('reg-username');
+        const username = usernameInput ? usernameInput.value.trim() : '';
+        
         const email = document.getElementById('reg-email').value.trim();
         const password = document.getElementById('reg-password').value.trim();
         const confirm = document.getElementById('reg-confirm').value.trim();
