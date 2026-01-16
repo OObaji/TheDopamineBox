@@ -5,7 +5,6 @@ const supabaseUrl = 'https://tfinyxgxnkpsilbtrrjk.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRmaW55eGd4bmtwc2lsYnRycmprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg1MTg2NTgsImV4cCI6MjA4NDA5NDY1OH0.MP0oIxNktekmIsBm-zxR7x31aJSTWujFpHkjlU6Qs2c';
 
 // Initialize Client with Safety Check
-// We use 'supabaseClient' instead of 'supabase' to avoid conflicts with the global CDN variable
 let supabaseClient = null;
 
 if (window.supabase) {
@@ -34,7 +33,7 @@ const State = {
     currentUser: null,
 
     async init() {
-        if (!supabaseClient) return; // Stop if DB didn't load
+        if (!supabaseClient) return; 
 
         // 1. Check for active Supabase session on load
         const { data: { session } } = await supabaseClient.auth.getSession();
@@ -43,9 +42,11 @@ const State = {
             this.setUser(session.user);
             await this.loadData();
             window.App.showDashboard();
+        } else {
+            window.App.showLogin();
         }
 
-        // 2. Listen for auth changes (Login, Logout, Auto-refresh)
+        // 2. Listen for auth changes
         supabaseClient.auth.onAuthStateChange((event, session) => {
             if (event === 'SIGNED_IN' && session) {
                 this.setUser(session.user);
@@ -61,10 +62,13 @@ const State = {
     },
 
     setUser(user) {
+        // Prioritize display_name from metadata, fallback to email
+        const displayName = user.user_metadata?.display_name || user.email.split('@')[0];
+        
         this.currentUser = {
             email: user.email,
             id: user.id,
-            name: user.email.split('@')[0] // Derive display name from email
+            name: displayName
         };
     },
 
@@ -98,10 +102,6 @@ const State = {
         } finally {
             window.App.toggleLoading(false);
         }
-    },
-
-    save() {
-        // Optional local save logic
     }
 };
 
@@ -145,7 +145,6 @@ const Auth = {
         
         window.App.toggleLoading(true);
         
-        // Real Supabase Login
         const { data, error } = await supabaseClient.auth.signInWithPassword({
             email,
             password
@@ -162,6 +161,7 @@ const Auth = {
         e.preventDefault();
         if (!supabaseClient) return;
 
+        const username = document.getElementById('reg-username').value.trim();
         const email = document.getElementById('reg-email').value.trim();
         const password = document.getElementById('reg-password').value.trim();
         const confirm = document.getElementById('reg-confirm').value.trim();
@@ -171,12 +171,21 @@ const Auth = {
             return;
         }
 
+        if (!username) {
+            alert("Please choose a username.");
+            return;
+        }
+
         window.App.toggleLoading(true);
 
-        // Real Supabase Registration
         const { data, error } = await supabaseClient.auth.signUp({
             email,
-            password
+            password,
+            options: {
+                data: {
+                    display_name: username
+                }
+            }
         });
 
         window.App.toggleLoading(false);
@@ -199,6 +208,7 @@ const Auth = {
         window.App.toggleLoading(true);
         await supabaseClient.auth.signOut();
         window.App.toggleLoading(false);
+        window.App.closeBrainDumpForce(); // Ensure sidebar closes on logout
     },
 
     togglePassword(fieldId) {
@@ -304,33 +314,14 @@ const Timer = {
 // --- MODULE: App Logic (Controller) ---
 window.App = {
     async init() {
-        // --- 1. CONNECT DATABASE SAFE CHECK ---
         if (window.supabase) {
-            // Re-assign if necessary, or just use the global
             if (!supabaseClient) supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
         } else {
             console.error("🚨 Supabase Library not found! Check index.html");
-            const errorBanner = document.createElement('div');
-            errorBanner.style.cssText = `
-                position: fixed; top: 0; left: 0; width: 100%;
-                background: #ef4444; color: white; padding: 1rem;
-                text-align: center; z-index: 9999; font-weight: bold;
-                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            `;
-            errorBanner.innerHTML = `⚠️ Database Error: Supabase script missing. Check console.`;
-            document.body.appendChild(errorBanner);
             return;
         }
 
-        // --- 2. INITIALIZE STATE ---
         await State.init();
-        
-        if (State.currentUser) {
-            this.showDashboard();
-        } else {
-            this.showLogin();
-        }
-        
         if (window.lucide) window.lucide.createIcons();
         console.log("✅ Dopamine Box Initialized");
     },
@@ -350,6 +341,8 @@ window.App = {
         if(authView) authView.classList.remove('hidden');
         if(dashView) dashView.classList.add('hidden');
         if(focusView) focusView.classList.add('hidden');
+
+        this.closeBrainDumpForce(); // CRITICAL FIX: Hide brain dump on login screen
     },
 
     showDashboard() {
@@ -738,6 +731,20 @@ window.App = {
                 sidebar.classList.remove('sidebar-open');
                 overlay.classList.add('hidden');
             }
+        }
+    },
+
+    // NEW helper function to force close brain dump
+    closeBrainDumpForce() {
+        const sidebar = document.getElementById('brain-dump-sidebar');
+        const overlay = document.getElementById('brain-dump-overlay');
+        
+        if (sidebar) {
+            sidebar.classList.add('sidebar-closed');
+            sidebar.classList.remove('sidebar-open');
+        }
+        if (overlay) {
+            overlay.classList.add('hidden');
         }
     },
 
