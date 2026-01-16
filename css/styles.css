@@ -1,0 +1,195 @@
+/* Body & Global Styles */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+/* --- Optimized Background (CSS Only) --- */
+.aurora-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -10;
+    background: linear-gradient(-45deg, #eef2ff, #e0e7ff, #f3e8ff, #fae8ff);
+    background-size: 400% 400%;
+    animation: aurora 15s ease infinite;
+}
+
+/* Fallback for Canvas */
+#interactive-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -10;
+}
+
+@keyframes aurora {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Smooth Animations */
+.fade-in {
+    animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.slide-up {
+    animation: slideUp 0.3s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(203, 213, 225, 0.5);
+    border-radius: 20px;
+}
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(203, 213, 225, 0.5) transparent;
+}
+
+/* Glassmorphism Cards */
+.glass-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 1.5rem; 
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05),
+                0 8px 10px -6px rgba(0, 0, 0, 0.01);
+}
+
+/* --- Auth Split Layout Styles --- */
+.auth-card-container {
+    display: flex;
+    width: 100%;
+    max-width: 950px;
+    min-height: 600px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 2rem;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.auth-image-side {
+    display: none;
+    width: 50%;
+    background-image: url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=2072&auto=format&fit=crop'); /* Calm productivity image */
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.auth-image-side::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top right, rgba(79, 70, 229, 0.3), transparent);
+}
+
+.auth-form-side {
+    width: 100%;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    text-align: center;
+}
+
+@media (min-width: 768px) {
+    .auth-image-side {
+        display: block;
+    }
+    .auth-form-side {
+        width: 50%;
+    }
+}
+
+/* Auth Forms */
+.auth-switch-btn {
+    transition: color 0.2s;
+}
+
+/* Password Toggle Fix */
+.password-toggle {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #94a3b8;
+    background: none;
+    border: none;
+    transition: color 0.2s;
+    z-index: 20;
+    appearance: none;
+    -webkit-appearance: none;
+}
+.password-toggle:hover {
+    color: #6366f1;
+}
+
+/* High Priority Badge Glow */
+.glow-urgent {
+    box-shadow: 0 0 15px rgba(244, 63, 94, 0.2);
+}
+
+/* Brain Dump Sidebar */
+.sidebar-closed {
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.sidebar-open {
+    transform: translateX(0);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Confetti Particle */
+.confetti {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 100;
+    will-change: transform, opacity;
+}
+
+/* Buttons & Utility Fixes */
+button:focus {
+    outline: none;
+}
+input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(99,102,241,0.5);
+}
