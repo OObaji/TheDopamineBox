@@ -1,0 +1,59 @@
+🧩 Icons Used (Lucide)
+
+The project uses the Lucide library. The specific icon names referenced in the HTML and JavaScript are:
+
+Navigation & UI:
+
+box (Logo)
+
+layout (Dashboard icon)
+
+brain (Brain Dump toggle)
+
+log-out (Logout button)
+
+chevron-right (Sidebar collapse)
+
+send (Brain dump input)
+
+Tasks & Actions:
+
+plus (Add task)
+
+trash-2 (Delete task/item)
+
+check (Complete subtask)
+
+check-circle (Complete main task)
+
+arrow-right (Move brain dump to task, Login button)
+
+sparkles (Empty state)
+
+Priority Indicators:
+
+star (Low priority)
+
+flag (Medium priority)
+
+flame (High priority)
+
+Forms & Auth:
+
+user (Username field)
+
+mail (Email field)
+
+lock (Password field)
+
+eye (Show/Hide password)
+
+check-square (Confirm password)
+
+Focus Mode:
+
+play (Start timer)
+
+pause (Pause timer)
+
+alert-circle (Stuck/Procrastination mode)
