@@ -1,8 +1,8 @@
 // ============================================
 // 🔌 SUPABASE CONFIGURATION
 // ============================================
-const supabaseUrl = 'https://tfinyxgxnkpsilbtrrjk.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRmaW55eGd4bmtwc2lsYnRycmprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg1MTg2NTgsImV4cCI6MjA4NDA5NDY1OH0.MP0oIxNktekmIsBm-zxR7x31aJSTWujFpHkjlU6Qs2c';
+const supabaseUrl = 'https://caaekkfqznbgvbxrnfvq.supabase.co';
+const supabaseKey = 'sb_publishable_wvwCCXc6noei0V-ohmTD_g_IJEWxwHd';
 
 // Initialize Client with Safety Check
 let supabaseClient = null;
